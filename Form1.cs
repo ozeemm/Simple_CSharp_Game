@@ -236,25 +236,5 @@ namespace CSharp_Events
             }
             circles = newCircles;
         }
-
-        private void CirclesLabel_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void AreaWidthLabel_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void AreaSpeedLabel_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void SpeedLabel_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }
