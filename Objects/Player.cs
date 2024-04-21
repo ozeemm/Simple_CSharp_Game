@@ -10,18 +10,23 @@ namespace CSharp_Events.Objects
 {
     internal class Player : BaseObject
     {
+        public float Speed = 2.5f;
         public float vX, vY;
 
         public Action<Marker> OnMarkerOverlap;
         public Action<Circle> OnCircleOverlap;
 
         // Вызов конструктора родительского класса
-        public Player(float x, float y, float angle) : base(x, y, angle) { }
+        public Player(float x, float y, float angle) : base(x, y, angle)
+        {
+            fillColor = Color.DeepSkyBlue;
+            currentColor = fillColor;
+        }
 
         public override void Render(Graphics graphics)
         {
             // Круг с фоном
-            graphics.FillEllipse(new SolidBrush(Color.DeepSkyBlue), -15, -15, 30, 30);
+            graphics.FillEllipse(new SolidBrush(currentColor), -15, -15, 30, 30);
             graphics.DrawEllipse(new Pen(Color.Black, 2), -15, -15, 30, 30);
 
             // Палочка, указывающая направление

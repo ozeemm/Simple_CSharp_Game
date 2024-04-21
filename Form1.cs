@@ -16,17 +16,35 @@ namespace CSharp_Events
         private List<BaseObject> objects = new List<BaseObject>();
         private Player player;
         private Marker marker;
+        private DarkArea darkArea;
         private int score = 0;
         public Form1()
         {
             InitializeComponent();
 
+            // Создаём тёмную область
+            darkArea = new DarkArea(-100, 0, 0);
+            darkArea.OnOverlap += (d, obj) =>
+            {
+                obj.Discolor();
+            };
+            darkArea.OnOver += (obj) =>
+            {
+                obj.NormalColor();
+            };
+            objects.Add(darkArea);
+
+            int middleX = pbMain.Width / 2;
+            int middleY = pbMain.Height / 2;
+            int startOffset = 75;
             // Создаём объекты
-            objects.Add(new Circle(100, 100, 0));
-            objects.Add(new Circle(200, 200, 0));
+            objects.Add(new Circle(middleX + startOffset, middleY + startOffset, 0));
+            objects.Add(new Circle(middleX - startOffset, middleY + startOffset, 0));
+            objects.Add(new Circle(middleX + startOffset, middleY - startOffset, 0));
+            objects.Add(new Circle(middleX - startOffset, middleY - startOffset, 0));
 
             // Создаём игрока в центре
-            player = new Player(pbMain.Width / 2, pbMain.Height / 2, 0);
+            player = new Player(middleX, middleY, 0);
             player.OnOverlap += (p, obj) =>
             {
                 Log($"Игрок пересекся с {obj}");
@@ -55,15 +73,28 @@ namespace CSharp_Events
             var graphics = e.Graphics; // Вытащили объект графики из события
             graphics.Clear(Color.White); // Заливка формы
 
-            updatePlayer(); // Перемещение игрока
-            
+            updateDarkArea(); // Перемещение чёрной области
+            updatePlayer(); // Перемещение игрока       
+
             // Проверяем пересечения
-            foreach(var obj in objects.ToList())
+            foreach (var obj in objects.ToList())
             {
                 if (obj != player && obj.Overlaps(player, graphics))
                 {
                     player.Overlap(obj);
                     obj.Overlap(player);
+                }
+
+                if(obj != darkArea)
+                {
+                    if(obj.Overlaps(darkArea, graphics))
+                    {
+                        darkArea.Overlap(obj);
+                    }
+                    else
+                    {
+                        darkArea.Over(obj);
+                    }
                 }
             }
             
@@ -91,8 +122,8 @@ namespace CSharp_Events
 
 
                 // Пересчитываем координаты игрока
-                player.vX = dx * 2f;
-                player.vY = dy * 2f;
+                player.vX = dx * player.Speed;
+                player.vY = dy * player.Speed;
 
                 // расчитываем угол поворота игрока 
                 player.Angle = (float)(90 - Math.Atan2(player.vX, player.vY) * 180 / Math.PI);
@@ -107,7 +138,15 @@ namespace CSharp_Events
             player.X += player.vX;
             player.Y += player.vY;
         }
+        private void updateDarkArea()
+        {
+            darkArea.X += darkArea.speed;
 
+            if (darkArea.X > pbMain.Width) // Сброс позиции
+                darkArea.X = -darkArea.width;
+        }
+
+        int t = 0;
         private void timer_Tick(object sender, EventArgs e)
         {
             // Запрашиваем обновление pbMain (Вызов Paint)

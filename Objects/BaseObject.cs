@@ -13,6 +13,8 @@ namespace CSharp_Events.Objects
         public float X;
         public float Y;
         public float Angle;
+        protected Color fillColor;
+        protected Color currentColor;
 
         public Action<BaseObject, BaseObject> OnOverlap; // Делегат, к которому будет привязать реакцию на события
         public BaseObject(float x, float y, float angle)
@@ -61,6 +63,9 @@ namespace CSharp_Events.Objects
                 this.OnOverlap(this, obj); // Вызываем их
             }
         }
+
+        public void Discolor() { currentColor = Color.White; }
+        public void NormalColor() { currentColor = fillColor; }
 
         public virtual void Render(Graphics graphics) { }
     }

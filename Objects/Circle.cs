@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CSharp_Events.Objects
@@ -12,12 +8,16 @@ namespace CSharp_Events.Objects
     internal class Circle : BaseObject
     {
         private static Random rand = new Random();
-        public Circle(float x, float y, float angle) : base(x, y, angle) { }
+        public Circle(float x, float y, float angle) : base(x, y, angle) 
+        {
+            fillColor = Color.GreenYellow;
+            currentColor = fillColor;
+        }
 
         public override void Render(Graphics graphics)
         {
             // Круг с фоном
-            graphics.FillEllipse(new SolidBrush(Color.GreenYellow), -15, -15, 30, 30);
+            graphics.FillEllipse(new SolidBrush(currentColor), -15, -15, 30, 30);
         }
         public override GraphicsPath GetGraphicsPath()
         {

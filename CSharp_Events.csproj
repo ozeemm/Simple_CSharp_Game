@@ -54,6 +54,7 @@
     </Compile>
     <Compile Include="Objects\BaseObject.cs" />
     <Compile Include="Objects\Circle.cs" />
+    <Compile Include="Objects\DarkArea.cs" />
     <Compile Include="Objects\Marker.cs" />
     <Compile Include="Objects\Player.cs" />
     <Compile Include="Program.cs" />
