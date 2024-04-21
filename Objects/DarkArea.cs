@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CSharp_Events.Objects
 {
@@ -18,7 +14,7 @@ namespace CSharp_Events.Objects
         }
 
         public int width = 150;
-        public float speed = 4f;
+        public float Speed = 4f;
 
         public override void Render(Graphics graphics)
         {

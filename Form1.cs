@@ -1,12 +1,8 @@
 ﻿using CSharp_Events.Objects;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CSharp_Events
@@ -18,6 +14,10 @@ namespace CSharp_Events
         private Marker marker;
         private DarkArea darkArea;
         private int score = 0;
+        private int circles = 2;
+
+        private const int messagesToClear = 75; // Порог для автоочистки
+        private int logMessages = 0;
         public Form1()
         {
             InitializeComponent();
@@ -36,12 +36,14 @@ namespace CSharp_Events
 
             int middleX = pbMain.Width / 2;
             int middleY = pbMain.Height / 2;
-            int startOffset = 75;
+
             // Создаём объекты
-            objects.Add(new Circle(middleX + startOffset, middleY + startOffset, 0));
-            objects.Add(new Circle(middleX - startOffset, middleY + startOffset, 0));
-            objects.Add(new Circle(middleX + startOffset, middleY - startOffset, 0));
-            objects.Add(new Circle(middleX - startOffset, middleY - startOffset, 0));
+            for (int i = 0; i < circles; i++)
+            {
+                var circle = new Circle(0, 0, 0);
+                circle.Respawn(pbMain);
+                objects.Add(circle);
+            }
 
             // Создаём игрока в центре
             player = new Player(middleX, middleY, 0);
@@ -58,6 +60,7 @@ namespace CSharp_Events
             {
                 score++;
                 ScoreLabel.Text = $"Счёт: {score}";
+                Application.OpenForms[0].Text = $"MyGame | Счёт: {score}";
                 circle.Respawn(pbMain);
             };
             objects.Add(player);
@@ -66,6 +69,20 @@ namespace CSharp_Events
         private void Log(string text)
         {
             txtLog.Text = $"[{DateTime.Now:HH:mm:ss:ff}] {text}\n" + txtLog.Text;
+            
+            // Счётчик
+            logMessages++;
+            LogCounter.Text = logMessages.ToString();
+            
+            // Автоочистка
+            if (logMessages > messagesToClear && AutoClearLog.Checked)
+                ClearLog();
+        }
+        private void ClearLog()
+        {
+            txtLog.Text = "";
+            logMessages = 0;
+            Log("Логи очищены!");
         }
 
         private void pbMain_Paint(object sender, PaintEventArgs e)
@@ -105,6 +122,7 @@ namespace CSharp_Events
                 obj.Render(graphics);
             }
         }
+
         private void updatePlayer()
         {
             if (marker != null)
@@ -140,19 +158,17 @@ namespace CSharp_Events
         }
         private void updateDarkArea()
         {
-            darkArea.X += darkArea.speed;
+            darkArea.X += darkArea.Speed;
 
             if (darkArea.X > pbMain.Width) // Сброс позиции
                 darkArea.X = -darkArea.width;
         }
 
-        int t = 0;
         private void timer_Tick(object sender, EventArgs e)
         {
             // Запрашиваем обновление pbMain (Вызов Paint)
             pbMain.Invalidate();
         }
-
         private void pbMain_MouseClick(object sender, MouseEventArgs e)
         {
             if (marker == null)
@@ -163,6 +179,82 @@ namespace CSharp_Events
 
             marker.X = e.X;
             marker.Y = e.Y;
+        }
+
+        private void ClearLogButton_Click(object sender, EventArgs e)
+        {
+            ClearLog();
+        }
+
+        private void SpeedTrack_Scroll(object sender, EventArgs e)
+        {
+            float speed = SpeedTrack.Value / 10.0f;
+            SpeedLabel.Text = $"Скорость игрока: {speed}";
+            player.Speed = speed;
+        }
+
+        private void AreaSpeedTrack_Scroll(object sender, EventArgs e)
+        {
+            float speed = AreaSpeedTrack.Value / 10.0f;
+            AreaSpeedLabel.Text = $"Скорость тёмной зоны: {speed}";
+            darkArea.Speed = speed;
+        }
+        private void AreaWidthTrack_Scroll(object sender, EventArgs e)
+        {
+            int width = AreaWidthTrack.Value;
+            AreaWidthLabel.Text = $"Ширина тёмной зоны: {width}"; ;
+            darkArea.width = width;
+        }
+        private void CirclesTrack_Scroll(object sender, EventArgs e)
+        {
+            int newCircles = CirclesTrack.Value;
+            CirclesLabel.Text = $"Количество кружков: {newCircles}";
+
+            if(newCircles > circles)
+            {
+                for(int i = 0; i < newCircles-circles; i++)
+                {
+                    var circle = new Circle(0, 0, 0);
+                    circle.Respawn(pbMain);
+                    objects.Add(circle);
+                }
+            }
+            else if(newCircles < circles)
+            {
+                int k = 0;
+                foreach(var obj in objects.ToList())
+                {
+                    if(obj is Circle)
+                    {
+                        k++;
+                        if(k > newCircles)
+                        {
+                            objects.Remove(obj);
+                        }
+                    }
+                }
+            }
+            circles = newCircles;
+        }
+
+        private void CirclesLabel_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void AreaWidthLabel_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void AreaSpeedLabel_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void SpeedLabel_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
