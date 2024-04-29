@@ -123,10 +123,9 @@ namespace CSharp_Events
                 dx /= length;
                 dy /= length;
 
-
                 // Пересчитываем координаты игрока
-                player.vX = dx * player.Speed;
-                player.vY = dy * player.Speed;
+                player.vX += dx * player.Speed * 0.2f;
+                player.vY += dy * player.Speed * 0.2f;
 
                 // расчитываем угол поворота игрока 
                 player.Angle = (float)(90 - Math.Atan2(player.vX, player.vY) * 180 / Math.PI);
