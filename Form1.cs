@@ -14,9 +14,9 @@ namespace CSharp_Events
         private Marker marker;
         private DarkArea darkArea;
         private int score = 0;
-        private int circles = 2;
+        private int circles = 0;
 
-        private const int messagesToClear = 75; // Порог для автоочистки
+        private const int messagesToClear = 100; // Порог для автоочистки
         private int logMessages = 0;
         public Form1()
         {
@@ -28,22 +28,13 @@ namespace CSharp_Events
             {
                 obj.Discolor();
             };
-            darkArea.OnOver += (obj) =>
-            {
-                obj.NormalColor();
-            };
             objects.Add(darkArea);
 
             int middleX = pbMain.Width / 2;
             int middleY = pbMain.Height / 2;
 
-            // Создаём объекты
-            for (int i = 0; i < circles; i++)
-            {
-                var circle = new Circle(0, 0, 0);
-                circle.Respawn(pbMain);
-                objects.Add(circle);
-            }
+            // Создаём кружочки (2)
+            ChangeCirclesCount();
 
             // Создаём игрока в центре
             player = new Player(middleX, middleY, 0);
@@ -94,6 +85,7 @@ namespace CSharp_Events
             updatePlayer(); // Перемещение игрока       
 
             // Проверяем пересечения
+            List<BaseObject> touchingWithDarkArea = new List<BaseObject>();
             foreach (var obj in objects.ToList())
             {
                 if (obj != player && obj.Overlaps(player, graphics))
@@ -101,20 +93,13 @@ namespace CSharp_Events
                     player.Overlap(obj);
                     obj.Overlap(player);
                 }
-
-                if(obj != darkArea)
+                if(obj != darkArea && obj.Overlaps(darkArea, graphics))
                 {
-                    if(obj.Overlaps(darkArea, graphics))
-                    {
-                        darkArea.Overlap(obj);
-                    }
-                    else
-                    {
-                        darkArea.Over(obj);
-                    }
+                    touchingWithDarkArea.Add(obj);
                 }
             }
-            
+            darkArea.RecolorObjects(touchingWithDarkArea);
+
             // Рендерим объекты
             foreach (var obj in objects.ToList())
             {
@@ -205,27 +190,31 @@ namespace CSharp_Events
         } // Изменение ширины тёмной зоны
         private void CirclesTrack_Scroll(object sender, EventArgs e)
         {
+            ChangeCirclesCount(); 
+        } 
+        private void ChangeCirclesCount() 
+        {
             int newCircles = CirclesTrack.Value;
             CirclesLabel.Text = $"Количество кружков: {newCircles}";
 
-            if(newCircles > circles)
+            if (newCircles > circles)
             {
-                for(int i = 0; i < newCircles-circles; i++)
+                for (int i = 0; i < newCircles - circles; i++)
                 {
                     var circle = new Circle(0, 0, 0);
                     circle.Respawn(pbMain);
                     objects.Add(circle);
                 }
             }
-            else if(newCircles < circles)
+            else if (newCircles < circles)
             {
                 int k = 0;
-                foreach(var obj in objects.ToList())
+                foreach (var obj in objects.ToList())
                 {
-                    if(obj is Circle)
+                    if (obj is Circle)
                     {
                         k++;
-                        if(k > newCircles)
+                        if (k > newCircles)
                         {
                             objects.Remove(obj);
                         }

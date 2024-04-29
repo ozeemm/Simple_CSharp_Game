@@ -1,12 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Runtime.Remoting;
 
 namespace CSharp_Events.Objects
 {
     internal class DarkArea : BaseObject
     {
-        public Action<BaseObject> OnOver;
+        public List<BaseObject> touchingObjects = new List<BaseObject>();
         public DarkArea(float x, float y, float angle) : base(x, y, angle) 
         {
             fillColor = Color.Black;
@@ -28,12 +30,25 @@ namespace CSharp_Events.Objects
             return path;
         }
 
-        public virtual void Over(BaseObject obj)
+        public void RecolorObjects(List<BaseObject> objects)
         {
-            if (this.OnOver != null) // Если есть привязанные функции
+            // Обесцвечиваем всё, что касается
+            foreach (var obj in objects)
             {
-                this.OnOver(obj); // Вызываем их
+                obj.Discolor();
             }
+            if (touchingObjects != null)
+            {
+                // Возвращаем цвет тем, кто уже не касается
+                foreach (var obj in touchingObjects)
+                {
+                    if (!objects.Contains(obj))
+                    {
+                        obj.NormalColor();
+                    }
+                }
+            }
+            touchingObjects = objects;
         }
     }
 }
