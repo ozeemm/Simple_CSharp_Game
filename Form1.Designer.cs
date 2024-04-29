@@ -115,7 +115,6 @@
             this.SpeedLabel.Size = new System.Drawing.Size(139, 16);
             this.SpeedLabel.TabIndex = 5;
             this.SpeedLabel.Text = "Скорость игрока: 2,5";
-            this.SpeedLabel.Click += new System.EventHandler(this.SpeedLabel_Click);
             // 
             // AreaSpeedLabel
             // 
@@ -125,7 +124,6 @@
             this.AreaSpeedLabel.Size = new System.Drawing.Size(168, 16);
             this.AreaSpeedLabel.TabIndex = 7;
             this.AreaSpeedLabel.Text = "Скорость тёмной зоны: 4";
-            this.AreaSpeedLabel.Click += new System.EventHandler(this.AreaSpeedLabel_Click);
             // 
             // AreaSpeedTrack
             // 
@@ -156,7 +154,6 @@
             this.CirclesLabel.Size = new System.Drawing.Size(156, 16);
             this.CirclesLabel.TabIndex = 10;
             this.CirclesLabel.Text = "Количество кружков: 2";
-            this.CirclesLabel.Click += new System.EventHandler(this.CirclesLabel_Click);
             // 
             // CirclesTrack
             // 
@@ -177,7 +174,6 @@
             this.AreaWidthLabel.Size = new System.Drawing.Size(159, 15);
             this.AreaWidthLabel.TabIndex = 12;
             this.AreaWidthLabel.Text = "Ширина тёмной зоны: 150";
-            this.AreaWidthLabel.Click += new System.EventHandler(this.AreaWidthLabel_Click);
             // 
             // AreaWidthTrack
             // 

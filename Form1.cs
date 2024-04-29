@@ -121,8 +121,8 @@ namespace CSharp_Events
                 graphics.Transform = obj.GetTransform();
                 obj.Render(graphics);
             }
-        }
-
+        } // Отрисовка
+       
         private void updatePlayer()
         {
             if (marker != null)
@@ -155,14 +155,14 @@ namespace CSharp_Events
             // Пересчет позиция игрока с помощью вектора скорости
             player.X += player.vX;
             player.Y += player.vY;
-        }
+        } // Движение игрока
         private void updateDarkArea()
         {
             darkArea.X += darkArea.Speed;
 
             if (darkArea.X > pbMain.Width) // Сброс позиции
                 darkArea.X = -darkArea.width;
-        }
+        } // Движение тёмной области
 
         private void timer_Tick(object sender, EventArgs e)
         {
@@ -179,32 +179,30 @@ namespace CSharp_Events
 
             marker.X = e.X;
             marker.Y = e.Y;
-        }
+        } // Маркер
 
         private void ClearLogButton_Click(object sender, EventArgs e)
         {
             ClearLog();
-        }
-
+        } // Кнопка очистки логов
         private void SpeedTrack_Scroll(object sender, EventArgs e)
         {
             float speed = SpeedTrack.Value / 10.0f;
             SpeedLabel.Text = $"Скорость игрока: {speed}";
             player.Speed = speed;
-        }
-
+        }  // Изменение скорости игрока
         private void AreaSpeedTrack_Scroll(object sender, EventArgs e)
         {
             float speed = AreaSpeedTrack.Value / 10.0f;
             AreaSpeedLabel.Text = $"Скорость тёмной зоны: {speed}";
             darkArea.Speed = speed;
-        }
+        } // Изменение скорости тёмной зоны
         private void AreaWidthTrack_Scroll(object sender, EventArgs e)
         {
             int width = AreaWidthTrack.Value;
             AreaWidthLabel.Text = $"Ширина тёмной зоны: {width}"; ;
             darkArea.width = width;
-        }
+        } // Изменение ширины тёмной зоны
         private void CirclesTrack_Scroll(object sender, EventArgs e)
         {
             int newCircles = CirclesTrack.Value;
@@ -235,6 +233,6 @@ namespace CSharp_Events
                 }
             }
             circles = newCircles;
-        }
+        } // Изменение количества кружков
     }
 }
